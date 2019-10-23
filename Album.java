@@ -26,11 +26,36 @@ public class Album {
             System.out.println(song.getTitle() + " successfully added to " + this.album);
             return;
         }
-        if (!songOnFile(song.getTitle())) {
+        if (!songOnAlbum(song.getTitle())) {
             this.songs.add(song);
             System.out.println(song.getTitle() + " successfully added to " + this.album);
         } else {
             System.out.println(song.getTitle() + " already existing on " + this.album);
+        }
+    }
+
+    public void addToPlaylist(int trackNo, Playlist playlist) {
+        if (trackNo > this.songs.size()) {
+            System.out.println("There is no such track in " + this.album);
+            return;
+        }
+        Song searchSong = this.songs.get(trackNo - 1);
+        if (songOnAlbum(searchSong.getTitle())) {
+            LinkedList<Song> playlistSongs = playlist.getSongs();
+            playlistSongs.add(searchSong);
+            System.out.println(searchSong.toString() + " added to " + playlist.getPlayList());
+        } else {
+            System.out.println("There is no such track in " + this.album);
+        }
+    }
+
+    public void addToPlaylist(String songName, Playlist playlist) {
+        if (songOnAlbum(songName)) {
+            LinkedList<Song> playlistSongs = playlist.getSongs();
+            playlistSongs.add(getSong(songName));
+            System.out.println(getSong(songName).toString() + " added to " + playlist.getPlayList());
+        } else {
+            System.out.println("There is no such track in " + this.album);
         }
     }
 
@@ -41,21 +66,27 @@ public class Album {
         while (songList.hasNext()) {
             position++;
             Song songPrint = songList.next();
-            System.out.println(position + ". " + songPrint.getTitle() + " - " +
-                    songPrint.getTime());
+            System.out.println(position + ". " + songPrint.toString());
         }
     }
 
-    public boolean songOnFile(String songTitle) {
-        Iterator<Song> songList = this.songs.iterator();
+    private boolean songOnAlbum(String songTitle) {
         boolean alreadyStored = false;
-        while (songList.hasNext()) {
-            Song songStored = songList.next();
+        for (Song songStored : songs) {
             if (songStored.getTitle().equals(songTitle)) {
                 alreadyStored = true;
                 break;
             }
         }
         return alreadyStored;
+    }
+
+    private Song getSong(String songTitle) {
+        for (Song checkSong : this.songs) {
+            if (checkSong.getTitle().equals(songTitle)) {
+                return checkSong;
+            }
+        }
+        return null;
     }
 }
