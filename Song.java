@@ -19,4 +19,8 @@ public class Song {
         return time;
     }
 
+    @Override
+    public String toString() {
+        return this.title + " - " + this.time;
+    }
 }
